@@ -244,21 +244,22 @@ public class KeyHandler implements DeviceKeyHandler {
         }
     }
 
-    public KeyEvent handleKeyEvent(KeyEvent event) {
+    @Override
+    public boolean handleKeyEvent(KeyEvent event) {
         int scanCode = event.getScanCode();
         boolean isKeySupported = ArrayUtils.contains(sSupportedGestures, scanCode);
         boolean isSliderModeSupported = sSupportedSliderModes.indexOfKey(scanCode) >= 0;
         if (!isKeySupported && !isSliderModeSupported) {
-            return event;
+            return false;
         }
 
         // We only want ACTION_UP event, except FLIP_CAMERA_SCANCODE
         if (scanCode == FLIP_CAMERA_SCANCODE) {
             if (event.getAction() != KeyEvent.ACTION_DOWN) {
-                return null;
+                return false;
             }
         } else if (event.getAction() != KeyEvent.ACTION_UP) {
-            return null;
+            return false;
         }
 
         if (isSliderModeSupported) {
@@ -293,7 +294,7 @@ public class KeyHandler implements DeviceKeyHandler {
                 mEventHandler.sendMessage(msg);
             }
         }
-        return null;
+        return false;
     }
 
     private Message getMessageForKeyEvent(int scancode) {
@@ -361,5 +362,30 @@ public class KeyHandler implements DeviceKeyHandler {
         if (enabled) {
             mVibrator.vibrate(50);
         }
+    }
+
+    @Override
+    public Intent isActivityLaunchEvent(KeyEvent event) {
+        return null;
+    }
+
+    @Override
+    public boolean isCameraLaunchEvent(KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean isWakeEvent(KeyEvent event){
+        return false;
+    }
+
+    @Override
+    public boolean isDisabledKeyEvent(KeyEvent event) {
+        return false;
+    }
+
+    @Override
+    public boolean canHandleKeyEvent(KeyEvent event) {
+        return false;
     }
 }
