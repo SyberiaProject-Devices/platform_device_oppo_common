@@ -55,29 +55,29 @@ public class Startup extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(action)
                 || Intent.ACTION_PRE_BOOT_COMPLETED.equals(action)) {
             // Disable touchscreen gesture settings if needed
-            //if (!hasTouchscreenGestures()) {
-            //    disableComponent(context, TouchscreenGestureSettings.class.getName());
-            //} else {
-                //enableComponent(context, TouchscreenGestureSettings.class.getName());
+            if (!hasTouchscreenGestures()) {
+                disableComponent(context, TouchscreenGestureSettings.class.getName());
+            } else {
+                enableComponent(context, TouchscreenGestureSettings.class.getName());
                 // Restore nodes to saved preference values
-                //for (String pref : Constants.sGesturePrefKeys) {
-                    //boolean value = Constants.isPreferenceEnabled(context, pref);
-                    //String node = Constants.sBooleanNodePreferenceMap.get(pref);
+                for (String pref : Constants.sGesturePrefKeys) {
+                    boolean value = Constants.isPreferenceEnabled(context, pref);
+                    String node = Constants.sBooleanNodePreferenceMap.get(pref);
                     // If music gestures are toggled, update values of all music gesture proc files
-                    //if (pref.equals(Constants.TOUCHSCREEN_MUSIC_GESTURE_KEY)) {
-                        //for (String music_nodes: Constants.TOUCHSCREEN_MUSIC_GESTURES_ARRAY) {
-                            //if (!FileUtils.writeLine(music_nodes, value ? "1" : "0")) {
-                                //Log.w(TAG, "Write to node " + music_nodes +
-                                    //" failed while restoring saved preference values");
-                            //}
-                        //}
-                    //}
-                    //else if (!FileUtils.writeLine(node, value ? "1" : "0")) {
-                        //Log.w(TAG, "Write to node " + node +
-                            //" failed while restoring saved preference values");
-                    //}
-                //}
-            //}
+                    if (pref.equals(Constants.TOUCHSCREEN_MUSIC_GESTURE_KEY)) {
+                        for (String music_nodes: Constants.TOUCHSCREEN_MUSIC_GESTURES_ARRAY) {
+                            if (!FileUtils.writeLine(music_nodes, value ? "1" : "0")) {
+                                Log.w(TAG, "Write to node " + music_nodes +
+                                    " failed while restoring saved preference values");
+                            }
+                        }
+                    }
+                    else if (!FileUtils.writeLine(node, value ? "1" : "0")) {
+                        Log.w(TAG, "Write to node " + node +
+                            " failed while restoring saved preference values");
+                    }
+                }
+            }
 
             // Disable backtouch settings if needed
             if (hasGestureService(context)) {
@@ -193,11 +193,11 @@ public class Startup extends BroadcastReceiver {
                 com.android.internal.R.bool.config_enableGestureService);
     }
 
-    //static  boolean hasTouchscreenGestures() {
-    //    return new File(Constants.TOUCHSCREEN_CAMERA_NODE).exists() &&
-    //        new File(Constants.TOUCHSCREEN_DOUBLE_SWIPE_NODE).exists() &&
-    //        new File(Constants.TOUCHSCREEN_FLASHLIGHT_NODE).exists();
-    //}
+    static  boolean hasTouchscreenGestures() {
+        return new File(Constants.TOUCHSCREEN_CAMERA_NODE).exists() &&
+            new File(Constants.TOUCHSCREEN_DOUBLE_SWIPE_NODE).exists() &&
+            new File(Constants.TOUCHSCREEN_FLASHLIGHT_NODE).exists();
+    }
 
     static boolean hasButtonProcs() {
         return (new File(Constants.NOTIF_SLIDER_TOP_NODE).exists() &&
