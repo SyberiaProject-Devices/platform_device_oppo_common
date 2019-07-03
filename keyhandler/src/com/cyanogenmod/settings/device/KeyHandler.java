@@ -52,12 +52,12 @@ import android.util.SparseIntArray;
 import android.view.KeyEvent;
 import android.view.WindowManagerGlobal;
 
-import com.android.internal.os.DeviceKeyHandler;
+import com.android.internal.os.AlternativeDeviceKeyHandler;
 import com.android.internal.util.ArrayUtils;
 
-public class KeyHandler implements DeviceKeyHandler {
+public class KeyHandler implements AlternativeDeviceKeyHandler {
 
-    private static final String TAG = KeyHandler.class.getSimpleName();
+    private static final String TAG = AlternativeDeviceKeyHandler.class.getSimpleName();
     private static final int GESTURE_REQUEST = 1;
 
     private static final String KEY_GESTURE_HAPTIC_FEEDBACK =
